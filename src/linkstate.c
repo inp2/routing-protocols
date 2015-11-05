@@ -17,17 +17,15 @@ private:
 		vector<size_t> costs; 
 		int num_neighbors;
 		Graph *graph;
+		int id;
 	public:
-		Node(Graph *g) : graph(g) {}
+		Node(Graph *g, int i) : graph(g), id(i), num_neighbors(0) {}
 		void add_neighbor(string, int);
 	};
 
 	// mapping name of node -> node
 	map<string, Node*> nodes;
-
-	// mapping node -> its id
-	map<Node*, int> ids;
-
+	
 	// index nodes by int
 	int maxnode = 0;
 
@@ -36,29 +34,28 @@ public:
 	// add an edge based on a description
 	void add_edge(string, string, int);
 	void parse_edge(string); 
+	void dijkstra();
 };
 
 Graph::Node *Graph::get_or_create(string src)
 {
 	Node *n = nodes[src];
 	if (n == NULL) {
-		n = new Node(this); 
+		n = new Node(this, maxnode++); 
 		nodes[src] = n;
-		ids[n] = maxnode++;
 	}
 	return n; 
 }
 
 void Graph::Node::add_neighbor(string neighbor, int cost)
 {
-	Node *node = graph->nodes[neighbor];
-	int nodeidx = graph->ids[node];
-	if (nodeidx >= num_neighbors++) {
+	Node *node = graph->get_or_create(neighbor);
+	if (node->id >= num_neighbors++) {
 		neighbors.resize(num_neighbors);
 		costs.resize(num_neighbors);
 	} 
-	neighbors[nodeidx] = node;
-	costs[nodeidx] = cost; 
+	neighbors[node->id] = node;
+	costs[node->id] = cost; 
 }
 
 void Graph::add_edge(string src, string dest, int cost)
@@ -108,7 +105,6 @@ Graph *read_file(string filename)
 
 	return graph; 
 }
-
 
 int main(int argc, char *argv[])
 {
