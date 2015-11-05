@@ -1,5 +1,6 @@
 #If you use threads, add -pthread here.
 COMPILERFLAGS = -g -Wall -Wextra -Wno-sign-compare -std=c++0x
+CXX= clang++
 
 #Any libraries you might need linked in.
 #LINKLIBS = -lm
