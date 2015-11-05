@@ -1,32 +1,40 @@
+#include <map>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <array>
 
-void read_file(std::string filename)
+using namespace std;
+
+//map<string, string, string> read_file(string filename)
+void read_file(string filename)
 {
-	std::string line;
-	std::ifstream topo (filename);
+	string line;
+	std::string src;
+	std::string dest;
+	std::string weight;
+	ifstream topo (filename.c_str());
+	map<std::string, std::array<std::string, 2>> mymap;
 	if(topo.is_open())
 	{
-		while(getline(topo,line))
+		while(getline(topo, line))
 		{
-			std::istringstream iss(line);
-
-			do
-			{
-				std::string sub;
-				iss >> sub;
-				std::cout << sub << std::endl;
-			}while(iss);
+			 stringstream linestream(line);
+			 src = line[0];
+			 dest = line[2];
+			 weight = line[4];
+			 mymap.insert(weight,std::array<src, dest>);
 		}
 		topo.close();
+		//return mymap;
 	}
 	else
 	{
-		std::cout << "Unable to open file";
+		cout << "Unable to open file";
 	}
+
 }
 int main(int argc, char *argv[])
 {
@@ -36,8 +44,11 @@ int main(int argc, char *argv[])
 	}
 
 	// Get the topofile
-	std::string topofile  = argv[1];
+	string topofile  = argv[1];
 
 	// Read topofile, and parse topofile	
-	read_file(topofile);	
+//	map<string, string, string> topo_map;
+	read_file(topofile);
+	//topo_map = read_file(topofile);
+	// std::cout << topo_map << std::endl;	
 }
