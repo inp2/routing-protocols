@@ -8,7 +8,6 @@
 
 using namespace std;
 
-//map<string, string, string> read_file(string filename)
 void read_file(string filename)
 {
 	string line;
@@ -25,7 +24,6 @@ void read_file(string filename)
 			 src = line[0];
 			 dest = line[2];
 			 weight = line[4];
-			 mymap.insert(weight,std::array<src, dest>);
 		}
 		topo.close();
 		//return mymap;
