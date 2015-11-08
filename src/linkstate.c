@@ -8,63 +8,16 @@
 
 using namespace std;
 
-
-class Graph {
-private:
-	class Node { 
-	private:
-		vector<Node*> neighbors;
-		vector<size_t> costs; 
-		int num_neighbors;
-		Graph *graph;
-		int id;
-	public:
-		Node(Graph *g, int i) : graph(g), id(i), num_neighbors(0) {}
-		void add_neighbor(string, int);
-	};
-
-	// mapping name of node -> node
-	map<string, Node*> nodes;
-	
-	// index nodes by int
-	int maxnode = 0;
-
-	Node* get_or_create(string);
-public:
-	// add an edge based on a description
-	void add_edge(string, string, int);
-	void parse_edge(string); 
-	void dijkstra();
+struct Edge
+{
+	int destination;
+	int weight;
 };
 
-Graph::Node *Graph::get_or_create(string src)
-{
-	Node *n = nodes[src];
-	if (n == NULL) {
-		n = new Node(this, maxnode++); 
-		nodes[src] = n;
-	}
-	return n; 
-}
+// Create graph
+vector<Edge> graph;
 
-void Graph::Node::add_neighbor(string neighbor, int cost)
-{
-	Node *node = graph->get_or_create(neighbor);
-	if (node->id >= num_neighbors++) {
-		neighbors.resize(num_neighbors);
-		costs.resize(num_neighbors);
-	} 
-	neighbors[node->id] = node;
-	costs[node->id] = cost; 
-}
-
-void Graph::add_edge(string src, string dest, int cost)
-{
-	Node *srcnode = get_or_create(src); 
-	srcnode->add_neighbor(dest, cost);
-}
-
-void Graph::parse_edge(string line)
+void parse_edge(string line)
 {
 	line += " ";
 	int begin = 0, end = 0;
@@ -82,28 +35,27 @@ void Graph::parse_edge(string line)
 			end++;
 		}
 	} 
-	string src = columns[0];
-	string dest = columns[1];
+	int src = atoi(columns[0].c_str());
+	int dest = atoi(columns[1].c_str());
 	int cost = atoi(columns[2].c_str()); 
-	add_edge(src, dest, cost);
+	//Edge newEdge;
+	graph[src].destination = dest;
+	graph[src].weight = cost;
 }
 
-Graph *read_file(string filename)
+void read_file(string filename)
 {
 	string line;
 	ifstream topo(filename.c_str());
-	Graph *graph = new Graph;
 	if (topo.is_open()) {
 		while(getline(topo, line)) {
-			graph->parse_edge(line);
+			parse_edge(line);
 		}
 		topo.close();
 	} else {
 		cout << "Unable to open file";
 		exit(1);
 	}
-
-	return graph; 
 }
 
 int main(int argc, char *argv[])
@@ -117,5 +69,12 @@ int main(int argc, char *argv[])
 	string topofile  = argv[1];
 
 	// Read topofile, and parse topofile	
-	Graph *graph = read_file(topofile);
+	read_file(topofile);
+
+	// Print out graph
+	for(int i =0; i < graph.size(); i++)
+	{
+		cout << graph[i].destination << endl;
+		cout << graph[i].weight << endl;
+	}
 }
