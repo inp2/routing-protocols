@@ -8,14 +8,14 @@
 
 using namespace std;
 
-struct Edge
+struct edge
 {
 	int destination;
 	int weight;
 };
 
 // Create graph
-vector<Edge> graph;
+vector<edge> graph;
 
 void parse_edge(string line)
 {
@@ -39,8 +39,10 @@ void parse_edge(string line)
 	int dest = atoi(columns[1].c_str());
 	int cost = atoi(columns[2].c_str()); 
 	//Edge newEdge;
-	graph[src].destination = dest;
-	graph[src].weight = cost;
+	edge new_edge;
+	new_edge.destination = dest;
+	new_edge.weight = cost;
+	graph.push_back(std::move(new_edge));
 }
 
 void read_file(string filename)
