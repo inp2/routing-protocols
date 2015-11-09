@@ -162,7 +162,8 @@ int main(int argc, char *argv[])
 	// Get the topofile
   std::string topofile  = argv[1];
   std::string msgfile = argv[2];
-
+  std::string cfile = argv[3];
+  
 	int asize = find_array_size(topofile);
 
 	// std::cout << asize << std::endl;
@@ -179,7 +180,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-// Read topofile, and parse topofile
+    // Read topofile, and parse topofile
 	read_file(topofile, amat, node_list);
 
 	read_msg_file(msgfile, msg_list);
@@ -202,4 +203,15 @@ int main(int argc, char *argv[])
 	{
 		std::cout << "msg_list: " << msg_list.at(i) << std::endl;
 	}
+
+	// Update graph
+	read_file(cfile, amat, node_list);
+	std::cout << "Updated graph" << std::endl;
+    std::cout << "graph_test: " << amat(1,2) << std::endl;
+	std::cout << "graph_test: " << amat(2,3) << std::endl;
+	std::cout << "graph_test: " << amat(2,4) << std::endl;
+	std::cout << "graph_test: " << amat(2,5) << std::endl;
+	std::cout << "graph_test: " << amat(4,1) << std::endl;
+	std::cout << "graph_test: " << amat(4,5) << std::endl;
+	
 }
