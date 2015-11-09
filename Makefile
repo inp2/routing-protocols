@@ -1,6 +1,7 @@
 #If you use threads, add -pthread here.
-COMPILERFLAGS = -g -Wall -Wextra -Wno-sign-compare -std=c++0x
-CXX= clang++
+COMPILERFLAGS = -g -Wall -Wextra -Wno-sign-compare -std=c++11 -DBOUNDS_CHECK
+#CXX= clang++
+CXX=g++
 
 #Any libraries you might need linked in.
 #LINKLIBS = -lm

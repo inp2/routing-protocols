@@ -43,6 +43,8 @@ public:
 		auto pos = unpack_extents(std::forward<decltype(args)>(args)...);
 		#ifdef BOUNDS_CHECK
 		assert(pos == -1);
+		#else
+		(void)pos;
 		#endif
 		int len = 1;
 		for (int i = 0; i < ND; i++)
