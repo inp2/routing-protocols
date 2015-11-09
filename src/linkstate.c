@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <set>
+#include <string.h>
 
 #include "array.h"
 
@@ -149,48 +150,85 @@ void read_msg_file(std::string filename, std::vector<int> & msg_list)
 	}
 }
 
+void read_cfile(std::string filename, util::array<int,2> & amat)
+{
+	std::string line;
+	std::ifstream topo(filename.c_str());
+	if (topo.is_open())
+	{
+		while(getline(topo, line))
+		{
+			char * pch;
+			int i = 0;
+			std::string columns[3];
+			char * line_copy = new char[line.size()+1];
+			std::copy(line.begin(), line.end(), line_copy);
+			line_copy[line.size()] = '\0';
+			pch = strtok(line_copy, " ");
+			while(pch != NULL)
+			{
+				columns[i] = pch;
+				i++;
+				pch = strtok(NULL, " ");
+			}
+			int src = atoi(columns[0].c_str());
+			int dest = atoi(columns[1].c_str());
+			int cost = atoi(columns[2].c_str());
+			amat(src,dest) = cost;
+			amat(dest,src) = cost;
+			delete[] line_copy;
+		}
+		topo.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file" << std::endl;
+		exit(1);
+	}
+}
+
 
 int main(int argc, char *argv[])
 {
 	// util::array<int, 2> amat(20,20);
 
-  if (argc != 4) {
-		fprintf(stderr,"usage: distvec topofile messagefile changesfile\n");
-		exit(1);
-	}
+  if (argc != 4)
+  {
+	  fprintf(stderr,"usage: distvec topofile messagefile changesfile\n");
+	  exit(1);
+  }
 
-	// Get the topofile
+// Get the topofile
   std::string topofile  = argv[1];
   std::string msgfile = argv[2];
   std::string cfile = argv[3];
-  
-	int asize = find_array_size(topofile);
 
-	// std::cout << asize << std::endl;
-	
-	util::array<int, 2> amat(asize+1, asize+1);
-	std::set<int> node_list;
-	std::vector<int> msg_list;
-	
-	for(int j = 0; j < amat.len(1); j++)
-	{
-		for(int i = 0; i < amat.len(0); i++)
-		{
-			amat(i,j) = -1;
-		}
-	}
+  int asize = find_array_size(topofile);
 
-    // Read topofile, and parse topofile
-	read_file(topofile, amat, node_list);
+// std::cout << asize << std::endl;
+  util::array<int, 2> amat(asize+1, asize+1);
+  std::set<int> node_list;
+  std::vector<int> msg_list;
 
-	read_msg_file(msgfile, msg_list);
-	// Print out graph, should be 8
+  for(int j = 0; j < amat.len(1); j++)
+  {
+	  for(int i = 0; i < amat.len(0); i++)
+	  {
+		  amat(i,j) = -1;
+	  }
+  }
+
+// Read topofile, and parse topofile
+  read_file(topofile, amat, node_list);
+
+  read_msg_file(msgfile, msg_list);
+// Print out graph, should be 8
 	std::cout << "graph_test: " << amat(1,2) << std::endl;
 	std::cout << "graph_test: " << amat(2,3) << std::endl;
 	std::cout << "graph_test: " << amat(2,5) << std::endl;
 	std::cout << "graph_test: " << amat(4,1) << std::endl;
 	std::cout << "graph_test: " << amat(4,5) << std::endl;
-	
+
 	for(auto it: node_list)
 	{
 		// std::cout << "node_list" << std::endl;
@@ -205,7 +243,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Update graph
-	read_file(cfile, amat, node_list);
+	read_cfile(cfile, amat);
 	std::cout << "Updated graph" << std::endl;
     std::cout << "graph_test: " << amat(1,2) << std::endl;
 	std::cout << "graph_test: " << amat(2,3) << std::endl;
@@ -213,5 +251,6 @@ int main(int argc, char *argv[])
 	std::cout << "graph_test: " << amat(2,5) << std::endl;
 	std::cout << "graph_test: " << amat(4,1) << std::endl;
 	std::cout << "graph_test: " << amat(4,5) << std::endl;
-	
+
+	//Now run the algorithm
 }
