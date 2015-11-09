@@ -187,6 +187,30 @@ void read_cfile(std::string filename, util::array<int,2> & amat)
 	}
 }
 
+void dijsktra(util::array<int, 2> & amat, std::vector<int> & msg_list, std::set<int> & node_list)
+{
+	// Get starting node from msg_list
+	for(int i = 0; i < msg_list.size(); i++)
+	{
+		int src = msg_list.at(i);
+		int dest = msg_list.at(++i);
+
+		// Find all the nodes connected to src
+		for(int j = 0; j < amat.len(1); j++)
+		{
+			for(int i = 0; i < amat.len(0); i++)
+			{
+				if(i == src || j == src)
+				{
+					if(amat(i,j) > 0)
+					{
+						std::cout << i << " " << j << " " << amat(i,j) << std::endl;
+					}
+				}
+			}
+		}
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -253,4 +277,5 @@ int main(int argc, char *argv[])
 	std::cout << "graph_test: " << amat(4,5) << std::endl;
 
 	//Now run the algorithm
+	dijsktra(amat, msg_list, node_list);
 }
