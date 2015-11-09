@@ -6,18 +6,20 @@
 #include <sstream>
 #include <vector>
 
+#include "array.h"
+
 using namespace std;
 
 struct edge
 {
-	int destination;
+	int nodes[2];
 	int weight;
 };
 
 // Create graph
-vector<edge> graph;
+// vector<edge> graph;
 
-void parse_edge(string line)
+/** void parse_edge(string line)
 {
 	line += " ";
 	int begin = 0, end = 0;
@@ -40,9 +42,9 @@ void parse_edge(string line)
 	int cost = atoi(columns[2].c_str()); 
 	//Edge newEdge;
 	edge new_edge;
-	new_edge.destination = dest;
+	new_edge.nodes = {src, dest};
 	new_edge.weight = cost;
-	graph.push_back(std::move(new_edge));
+//	graph.push_back(std::move(new_edge));
 }
 
 void read_file(string filename)
@@ -58,11 +60,15 @@ void read_file(string filename)
 		cout << "Unable to open file";
 		exit(1);
 	}
-}
+}*/
 
 int main(int argc, char *argv[])
 {
-	if (argc != 4) {
+  util::array<int, 2> amat(20,20);
+  
+  amat(3,6) = 4;
+  std::cout << amat(3,6) << std::endl;
+/**	if (argc != 4) {
 		fprintf(stderr,"usage: distvec topofile messagefile changesfile\n");
 		exit(1);
 	}
@@ -76,7 +82,7 @@ int main(int argc, char *argv[])
 	// Print out graph
 	for(int i =0; i < graph.size(); i++)
 	{
-		cout << graph[i].destination << endl;
+		cout << graph[i].nodes << endl;
 		cout << graph[i].weight << endl;
-	}
+	}*/
 }
