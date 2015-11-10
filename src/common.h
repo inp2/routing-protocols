@@ -24,20 +24,6 @@ void print_table(vector<Table> &tables, set<int> &nodes)
 		}
 }
 
-// get next hop from src to dest
-int get_next_hop(int src, int dest, vector<int> &prev)
-{
-		if (src == dest) { 
-				return src;
-		}
-
-		int cur = dest;
-		while (prev[cur] != src) {
-				cur = prev[cur];
-		}
-		return cur;
-}
-
 
 void send_messages(vector<Table> &tables, vector<Message> &msg_list)
 { 
