@@ -1,7 +1,6 @@
 #If you use threads, add -pthread here.
-COMPILERFLAGS = -g -Wall -Wextra -Wno-sign-compare -std=c++11 -DBOUNDS_CHECK
-#CXX= clang++
-CXX=g++
+COMPILERFLAGS = -g -Wall -Wextra -Wno-sign-compare-DBOUNDS_CHECK -std=c++11
+CXX= g++
 
 #Any libraries you might need linked in.
 #LINKLIBS = -lm
@@ -21,15 +20,13 @@ LINKOBJECTS = obj/linkstate.o
 #The first rule in the Makefile is the default (the one chosen by plain `make`).
 #Since 'all' is first in this file, both `make all` and `make` do the same thing.
 #(`make obj server client talker listener` would also have the same effect).
-all : obj distvec linkstate 
+all : obj distvec linkstate
 
 #$@: name of rule's target: server, client, talker, or listener, for the respective rules.
 #$^: the entire dependency string (after expansions); here, $(SERVEROBJECTS)
 #CC is a built in variable for the default C compiler; it usually defaults to "gcc". (CXX is g++).
-distvec: $(DISTOBJECTS)
-	$(CXX) $(COMPILERFLAGS) $^ -o $@ $(LINKLIBS)
-
-
+distvec: $(DISTOBJECTS) 
+	$(CXX) $(COMPILERFLAGS) $(DISTOBJECTS) -o $@ $(LINKLIBS)
 
 #So, how does all of this work? This rule is saying 
 #
@@ -41,7 +38,7 @@ distvec: $(DISTOBJECTS)
 #In this case, CLIENTOBJECTS is just obj/client.o. So, if obj/client.o doesn't exist or is out of date, 
 #make will first look for a rule to build it. That rule is the 'obj/%.o' one, below; the % is a wildcard.
 linkstate: $(LINKOBJECTS)
-	$(CXX) $(COMPILERFLAGS) $^ -o $@ $(LINKLIBS)
+	$(CXX) $(COMPILERFLAGS) $(LINKOBJECTS) -o $@ $(LINKLIBS)
 
 
 #RM is a built-in variable that defaults to "rm -f".
@@ -52,7 +49,7 @@ clean :
 #The % sign means "match one or more characters". You specify it in the target, and when a file
 #dependency is checked, if its name matches this pattern, this rule is used. You can also use the % 
 #in your list of dependencies, and it will insert whatever characters were matched for the target name.
-obj/%.o: src/%.c
+obj/%.o: src/%.cc src/common.h
 	$(CXX) $(COMPILERFLAGS) -c -o $@ $<
 obj:
 	mkdir -p obj
