@@ -53,7 +53,6 @@ void read_file(std::string filename, util::array<int,2> & amat, std::set<int> & 
 				}
 				topo.close();
 		} else {
-				std::cout << "Unable to open file" << std::endl;
 				exit(1);
 		}
 }
@@ -107,10 +106,6 @@ int find_array_size(std::string filename)
 				}
 				topo.close();
 		}
-		else
-		{
-				std::cout << "Unable to open file" << std::endl;
-		}
 		return max;
 }
 
@@ -136,7 +131,6 @@ void read_msg_file(std::string filename, std::vector<Message> & msg_list)
 				}
 				topo.close();
 		} else {
-				std::cout << "Unable to open file" << std::endl;
 				exit(1);
 		}
 }
@@ -184,20 +178,6 @@ vector<int> get_neighbors(util::array<int, 2> &amat, int src)
 		} 
 
 		return ns;
-}
-
-// get next hop from src to dest
-int get_next_hop(int src, int dest, vector<int> &prev)
-{
-		if (src == dest) { 
-				return src;
-		}
-
-		int cur = dest;
-		while (prev[cur] != src) {
-				cur = prev[cur];
-		}
-		return cur;
 }
 
 typedef vector<pair<int, int> > Table;
@@ -265,6 +245,8 @@ vector<Table> build_tables(util::array<int, 2> & amat, std::set<int> & nodes)
 										dist[v] = alt;
 										q[v] = alt;
 										prev[v] = u;
+								} else if (alt == dist[v] && u < prev[v]) {
+										prev[v] = u;
 								}
 						}
 				}
@@ -272,7 +254,6 @@ vector<Table> build_tables(util::array<int, 2> & amat, std::set<int> & nodes)
 				// update routing table accordingly
 				Table table;
 				table.resize(amat.len(0)); 
-				cerr << "table for " << src << endl;
 				for (int dest: nodes) { 
 						int next_hop = get_next_hop(src, dest, prev);
 						table[dest] = pair<int, int>(next_hop, dist[dest]);
@@ -288,7 +269,7 @@ int main(int argc, char *argv[])
 
 		if (argc != 4)
 		{
-				fprintf(stderr,"usage: distvec topofile messagefile changesfile\n");
+				fprintf(stderr,"usage: linkstate topofile messagefile changesfile\n");
 				exit(1);
 		}
 
