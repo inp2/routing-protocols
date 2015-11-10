@@ -224,12 +224,15 @@ vector<Table> build_tables(util::array<int, 2> & amat, std::set<int> & nodes)
 				vector<bool> visited;
 				visited.resize(amat.len(0));
 				fill(visited.begin(), visited.end(), false);
+				vector<int> firsthop;
+				firsthop.resize(amat.len(0));
 
 
 				// begin with src
 				dist[src] = 0; 
 				q[src] = 0; 
 				prev[src] = src;
+				firsthop[src] = src;
 
 				while (not q.empty()) { 
 						auto min = q.begin(); 
@@ -245,8 +248,18 @@ vector<Table> build_tables(util::array<int, 2> & amat, std::set<int> & nodes)
 										dist[v] = alt;
 										q[v] = alt;
 										prev[v] = u;
+										if (u != src) {
+											firsthop[v] = firsthop[u];
+										} else {
+											firsthop[v] = v;
+										}
 								} else if (alt == dist[v] && u < prev[v]) {
-										prev[v] = u;
+									prev[v] = u;
+									if (u != src) {
+										firsthop[v] = firsthop[u];
+									} else {
+										firsthop[v] = v;
+									}
 								}
 						}
 				}
@@ -255,7 +268,7 @@ vector<Table> build_tables(util::array<int, 2> & amat, std::set<int> & nodes)
 				Table table;
 				table.resize(amat.len(0)); 
 				for (int dest: nodes) { 
-						int next_hop = get_next_hop(src, dest, prev);
+						int next_hop = firsthop[dest];
 						table[dest] = pair<int, int>(next_hop, dist[dest]);
 				}
 				tables[src] = table;
