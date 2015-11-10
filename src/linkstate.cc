@@ -15,6 +15,7 @@
 
 using namespace std;
 
+
 void parse_edge(std::string line, util::array<int,2> & amat, std::set<int> & node_list)
 {
 		line += " ";
@@ -24,7 +25,7 @@ void parse_edge(std::string line, util::array<int,2> & amat, std::set<int> & nod
 		int i = 0;
 		while (end < line.length()) {
 				char c = p[end];
-				//cout << "[" << c << "]";
+				//fout << "[" << c << "]";
 				if (!isalnum(c)) {
 						columns[i++] = line.substr(begin, end-begin);
 						while (end < line.length() and !isalnum(p[end])) end++;
@@ -66,7 +67,7 @@ int find_max(std::string line)
 		int i = 0;
 		while (end < line.length()) {
 				char c = p[end];
-				//cout << "[" << c << "]";
+				//fout << "[" << c << "]";
 				if (!isalnum(c)) {
 						columns[i++] = line.substr(begin, end-begin);
 						while (end < line.length() and !isalnum(p[end])) end++;
@@ -315,6 +316,8 @@ int main(int argc, char *argv[])
 		read_msg_file(msgfile, msg_list);
 
 		std::ifstream changes(cfile.c_str());
+
+		fout.open("output.txt");
 
 
 		// Update graph

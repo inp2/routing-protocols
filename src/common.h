@@ -3,6 +3,8 @@
 
 using namespace std;
 
+ofstream fout;
+
 typedef vector<pair<int, int> > Table;
 struct Message {
 		int src;
@@ -17,7 +19,7 @@ void print_table(vector<Table> &tables, set<int> &nodes)
 				Table &table = tables[src];
 				for (int dest : nodes) { 
 						auto &entry = table[dest];
-						cout << dest << " " << entry.first << " " << entry.second << endl;
+						fout << dest << " " << entry.first << " " << entry.second << endl;
 				}
 		}
 }
@@ -25,15 +27,15 @@ void print_table(vector<Table> &tables, set<int> &nodes)
 void send_messages(vector<Table> &tables, vector<Message> &msg_list)
 { 
 		for (Message &msg: msg_list) {
-				cout << "from " << msg.src << " to " << msg.dest << " hops ";
+				fout << "from " << msg.src << " to " << msg.dest << " hops ";
 				int cur = msg.src;
 				string hops;
 				while (cur != msg.dest) {
-						cout << cur << " ";
+						fout << cur << " ";
 						Table &table = tables[cur]; 
 						int next = table[msg.dest].first;
 						cur = next; 
 				}
-				cout << msg.content << endl;
+				fout << msg.content << endl;
 		}
 }
